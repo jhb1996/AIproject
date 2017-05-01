@@ -7,7 +7,7 @@ class Card:
 		self.suit = suit
 
 	def card(self):
-		print self.value + self.suit
+		return self.value + self.suit
 
 	def value(self):
 		return self.value
@@ -60,14 +60,24 @@ class Hand:
 
 
 class Player:
-	money = 0
 	def __init__(self):
-		Player.money = 2500
+		self.money = 25000
+
+	def get_money(self):
+		return self.money
+
+	def set_money(self,amount):
+		self.money = amount
 
 class AI:
-	money = 0
 	def __init__(self):
-		Player.money = 2500
+		self.money = 25000
+
+	def get_money(self):
+		return self.money
+
+	def set_money(self,amount):
+		self.money = amount
 
 def preflopHand(card1,card2):
 	suited = 'o'
@@ -85,28 +95,117 @@ def preflopHandRank(hand):
 			return line.split('	')[0]
 	return 2000
 
+def postFlopHandValue(hole_cards,table_cards):
+
+	straightFlush = False
+	quads = False
+	fullHouse = False
+	flush = False #done
+	straight = False
+	set3 = False
+	ThreeOfAKind = False
+	twoPair = False
+	overPair = False
+	highPair = False
+	flushDraw = False
+	openEnder = False
+	gutShot = False
+	mediumPair = False
+	lowPair = False
+	underPair = False
+	highKicker = False
+	goodKicker = False
+	backdoorFlush = False
+	backdoorStraight = False
+
+	#todo determine all of this
+
+def postFlopBoardScare(table_cards):
+	
+	table_card_values = []
+	for x in table_cards:
+		table_card_values.append(x.num_value)
+
+	table_card_values.sort()
+
+	flush3 = False
+	flush2 = False
+	straight3 = False
+	straight4 = False
+	straight5 = False
+	triple = False
+	double = False
+
+	if table_cards[0].suit() is table_cards[1].suit() is table_cards[2].suit():
+		flush3 = True
+	elif table_cards[0].suit() is table_cards[1].suit() or table_cards[1].suit() is table_cards[2].suit() or table_cards[0].suit() is table_cards[2].suit():
+		flush2 = True
+
+	if table_cards[0].value() is table_cards[1].value() is table_cards[2].value():
+		triple = True
+	elif table_cards[0].value() is table_cards[1].value() or table_cards[1].value() is table_cards[2].value() or table_cards[0].value() is table_cards[2].value():
+		double = True
+	elif (table_card_values[2] - table_card_values[0]) is 2:
+		straight3 = True
+	elif (table_card_values[2] - table_card_values[0]) is 3:
+		straight4 = True
+	elif (table_card_values[2] - table_card_values[0]) is 4:
+		straight5 = True
+
+	if straight3 and flush3:
+		return 5
+	elif (double and flush2) or flush3:
+		return 4
+	elif triple or straight4 or straight3 or double:
+		return 3
+	elif flush2 or straight5:
+		return 2
+	else:
+		return 1 
 
 
+def play_hand(player, ai, first):
+	player_money = player.get_money()
+	ai_money = ai.get_money()
+	print ("You currently have : $" + str(player_money))
+	print ("Your apponent has: $" +str(ai_money))
+	deck = Deck()
+	player_cards = []
+	ai_cards = []
+	card1 = deck.dealCard()
+	card2 = deck.dealCard()
+	card3 = deck.dealCard()
+	card4 = deck.dealCard()
+	player_cards.append(card1)
+	player_cards.append(card3)
+	ai_cards.append(card2)
+	ai_cards.append(card4)
+	print('\nYou have been delt: ' + card1.card() + ' ' + card3.card())
+
+
+def play_game():
+	player = Player()
+	ai = AI ()
+	print ("Welcome to heads up no limit hold'em!")
+	play_hand(player, ai, True)
 
 
 
 #tests to be deleted
-d = Deck()
-d.deck()
-print('')
-print('')
-card1 = d.dealCard()
-card2 = d.dealCard()
-print('')
-print('')
-d.deck()
-print('')
-print('')
-print preflopHand(card1,card2)
-print preflopHandRank(preflopHand(card1,card2))
+def tests():
+	play_game()
+	# d = Deck()
+	# d.deck()
+	# print('')
+	# print('')
+	# card1 = d.dealCard()
+	# card2 = d.dealCard()
+	# print('')
+	# print('')
+	# d.deck()
+	# print('')
+	# print('')
+	# print preflopHand(card1,card2)
+	# print preflopHandRank(preflopHand(card1,card2))
 
-
-#c = Card('2','H')
-#c.card()
-#d = Deck()
-#d.deck()
+tests()
