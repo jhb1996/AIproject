@@ -44,7 +44,7 @@ class Deck:
 
 	def deck(self):
 		for i in range (0,len(self.cards)):
-			self.cards[i].card()
+			print self.cards[i].card()
 
 	def dealCard(self):
 		return self.cards.pop(0)
@@ -163,6 +163,48 @@ def postFlopBoardScare(table_cards):
 	else:
 		return 1 
 
+def play_preflop(plm, aim, first, player_cards, ai_cards):
+	player_money = plm
+	ai_money = aim
+	pot = 0
+	player_call = False
+	ai_call = False
+	current_bet = False
+	if first:
+		print ('\n you bet first. To check just bet $0 ')
+
+	while not player_call or not ai_call:
+		if first:
+			while True:
+				print ("The current_bet it : $" + str(current_bet))
+				print ("Please type how much you want to bet or type 'fold' ")
+				var = raw_input('')
+				if var is 'fold':
+					player_call =True
+					ai_call = True
+					#ai wins stuff
+					break
+				elif int(var) is current_bet:
+					first = False
+					player_call = True
+					player_money = player_money- int(var)
+					pot = pot + int(var)
+					break
+				elif int(var) < current_bet:
+					print('You did not match the current bet. You must bet at least that to call or more to raise')
+				else:
+					first = False
+					player_call = True
+					ai_call = False
+					current_bet = int(var) - current_bet()
+					#need to finish 
+
+
+
+		else:
+			a = 1
+
+
 
 def play_hand(player, ai, first):
 	player_money = player.get_money()
@@ -183,6 +225,9 @@ def play_hand(player, ai, first):
 	print('\nYou have been delt: ' + card1.card() + ' ' + card3.card())
 
 
+	
+
+
 def play_game():
 	player = Player()
 	ai = AI ()
@@ -193,19 +238,21 @@ def play_game():
 
 #tests to be deleted
 def tests():
-	play_game()
-	# d = Deck()
-	# d.deck()
-	# print('')
-	# print('')
-	# card1 = d.dealCard()
-	# card2 = d.dealCard()
-	# print('')
-	# print('')
-	# d.deck()
-	# print('')
-	# print('')
-	# print preflopHand(card1,card2)
-	# print preflopHandRank(preflopHand(card1,card2))
+	#play_game()
+	d = Deck()
+	d.deck()
+	print('')
+	print('')
+	card1 = d.dealCard()
+	card2 = d.dealCard()
+	print('')
+	print('')
+	d.deck()
+	print('')
+	print('')
+	print preflopHand(card1,card2)
+	print preflopHandRank(preflopHand(card1,card2))
 
 tests()
+
+
