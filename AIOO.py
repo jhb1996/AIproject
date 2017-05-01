@@ -163,13 +163,20 @@ def postFlopBoardScare(table_cards):
 	else:
 		return 1 
 
+def ai_preflop(current_bet,bet_number):
+	#stuff
+	return current_bet
+
+
 def play_preflop(plm, aim, first, player_cards, ai_cards):
+	first = first
 	player_money = plm
 	ai_money = aim
 	pot = 0
 	player_call = False
 	ai_call = False
-	current_bet = False
+	current_bet = 0
+	bet_number = 1
 	if first:
 		print ('\n you bet first. To check just bet $0 ')
 
@@ -177,8 +184,7 @@ def play_preflop(plm, aim, first, player_cards, ai_cards):
 		if first:
 			while True:
 				print ("The current_bet it : $" + str(current_bet))
-				print ("Please type how much you want to bet or type 'fold' ")
-				var = raw_input('')
+				var = input("Please type how much you want to bet or type 'fold' ")
 				if var is 'fold':
 					player_call =True
 					ai_call = True
@@ -196,13 +202,31 @@ def play_preflop(plm, aim, first, player_cards, ai_cards):
 					first = False
 					player_call = True
 					ai_call = False
-					current_bet = int(var) - current_bet()
-					#need to finish 
-
-
-
+					current_bet = int(var) - current_bet
+					player_money = player_money - int(var)
+					pot = pot + int(var)
+					current_bet += 1
+					break
 		else:
-			a = 1
+			ai_action = ai_preflop(current_bet,bet_number)
+			if ai_action is -1:
+				print 'AI folds you win'
+				#you win stuf
+			elif ai_action is current_bet:
+				ai_call = True
+				first  = True
+				ai_money -= current_bet
+				pot += current_bet
+				print('AI called')
+			else:
+				ai_call = True
+				player_call = False
+				current_bet = ai_action - current_bet
+				ai_money -= current_bet
+				pot += current_bet
+				print ('AI raised : ' + str(current_bet))
+
+
 
 
 
@@ -223,7 +247,7 @@ def play_hand(player, ai, first):
 	ai_cards.append(card2)
 	ai_cards.append(card4)
 	print('\nYou have been delt: ' + card1.card() + ' ' + card3.card())
-
+	play_preflop(player_money,ai_money,first,player_cards,ai_cards)
 
 	
 
@@ -238,20 +262,20 @@ def play_game():
 
 #tests to be deleted
 def tests():
-	#play_game()
-	d = Deck()
-	d.deck()
-	print('')
-	print('')
-	card1 = d.dealCard()
-	card2 = d.dealCard()
-	print('')
-	print('')
-	d.deck()
-	print('')
-	print('')
-	print preflopHand(card1,card2)
-	print preflopHandRank(preflopHand(card1,card2))
+	play_game()
+	# d = Deck()
+	# d.deck()
+	# print('')
+	# print('')
+	# card1 = d.dealCard()
+	# card2 = d.dealCard()
+	# print('')
+	# print('')
+	# d.deck()
+	# print('')
+	# print('')
+	# print preflopHand(card1,card2)
+	# print preflopHandRank(preflopHand(card1,card2))
 
 tests()
 
