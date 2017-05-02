@@ -164,7 +164,6 @@ def checkFlush(hole_cards, shared_cards):
 		availableSuits.append(available[x].suit)
 		availableVals.append(available[x].num_value())
 	if availableSuits.count('H') >= 5 or availableSuits.count('C') >= 5 or availableSuits.count('D') >= 5 or availableSuits.count('S') >= 5:
-		print("test")
 		#print(availableVals)
 		availableVals.sort(reverse=True)
 		
@@ -228,13 +227,9 @@ def checkOnePair(hole_cards, shared_cards):
 	available=hole_cards+shared_cards
 	for x in range(len(available)):
 		available[x]= available[x].num_value()
-		#print (available[x])
-		#print("test")
 	for num in range(14, 1, -1): 
-		#print(available.count(num) == 2)
 		if available.count(num) == 2: 
 			for n in range (14, 2, -1): 
-				print(n)
 				if available.count(n) == 1: 
 					for m in range(n-1, 2, -1): 
 						if available.count(m) == 1: 
@@ -250,18 +245,172 @@ def checkHighCard(hole_cards, shared_cards):
 	available.sort(reverse=True)
 	return True, [available[:5]]
 	
-if __name__ == '__main__':
-	card1=Card("K",'C')
-	card2=Card("Q",'C')
-	card3=Card("2",'H')
-	card4=Card("9",'C')
-	card5=Card("3",'C')
-	card6=Card("5", 'C')
-	card7=Card("6",'C')
-	hole_cards=[card1, card2]
-	shared_cards=[card3, card4, card5, card6, card7,]
-	truth, best_five = checkHighCard(hole_cards, shared_cards)
+"""takes the AIcards (a list of two card objects), the Oponent
+	cards and the table cards (a list of 5 card objects)
+	and returns a winner. Returns 1 if AI wins, -1 if player wins
+	and 0 if tie"""
+def findWinner(AIcards, Playercards, shared_cards):
 	
-	print(truth, best_five)
+	AItruth, AIbest_five = checkStraightFlush(AI_cards, shared_cards)
+	Playertruth, Playerbest_five = checkStraightFlush(Player_cards, shared_cards)
+	if AItruth==True and Playertruth==False:
+		return 1
+	elif AItruth==False and Playertruth==True:
+		return -1
+	elif AItruth==True and Playertruth==True:
+		if AIbest_five[0]>Playerbest_five[0]:
+			return 1
+		elif Playerbest_five[0]<AIbest_five[0]:
+			return -1
+		else: return 0
+	
+	AItruth, AIbest_five = checkFourOfAKind(AI_cards, shared_cards)
+	Playertruth, Playerbest_five = checkFourOfAKind(Player_cards, shared_cards)
+	if AItruth==True and Playertruth==False:
+		return 1
+	elif AItruth==False and Playertruth==True:
+		return -1
+	elif AItruth==True and Playertruth==True:
+		if AIbest_five[0]>Playerbest_five[0] or (AIbest_five[0]==Playerbest_five[0] and AIbest_five[4]>Playerbest_five[4]):
+			return 1
+		elif AIbest_five[0]<Playerbest_five[0] or (AIbest_five[0]==Playerbest_five[0] and AIbest_five[4]<Playerbest_five[4]):
+			return -1
+		else: return 0
+	
+	AItruth, AIbest_five = checkFullHouse(AI_cards, shared_cards)
+	Playertruth, Playerbest_five = checkFullHouse(Player_cards, shared_cards)
+	if AItruth==True and Playertruth==False:
+		return 1
+	elif AItruth==False and Playertruth==True:
+		return -1
+	elif AItruth==True and Playertruth==True:
+		if AIbest_five[0]>Playerbest_five[0] or (AIbest_five[0]==Playerbest_five[0] and AIbest_five[3]>Playerbest_five[3]):
+			return 1
+		elif AIbest_five[0]<Playerbest_five[0] or (AIbest_five[0]==Playerbest_five[0] and AIbest_five[3]<Playerbest_five[3]):
+			return -1
+		else: return 0
+		
+	AItruth, AIbest_five = checkFlush(AI_cards, shared_cards)
+	Playertruth, Playerbest_five = checkFlush(Player_cards, shared_cards)
+	if AItruth==True and Playertruth==False:
+		return 1
+	elif AItruth==False and Playertruth==True:
+		return -1
+	elif AItruth==True and Playertruth==True:
+		if AIbest_five[0]>Playerbest_five[0]:return 1
+		elif AIbest_five[0]<Playerbest_five[0]:return-1
+		elif AIbest_five[1]>Playerbest_five[1]:return 1
+		elif AIbest_five[1]<Playerbest_five[1]:return-1
+		elif AIbest_five[2]>Playerbest_five[2]:return 1
+		elif AIbest_five[2]<Playerbest_five[2]:return-1
+		elif AIbest_five[3]>Playerbest_five[3]:return 1
+		elif AIbest_five[3]<Playerbest_five[3]:return-1
+		elif AIbest_five[4]>Playerbest_five[4]:return 1
+		elif AIbest_five[4]<Playerbest_five[4]:return-1
+		else: return 0
+	
+	AItruth, AIbest_five = checkStraight(AI_cards, shared_cards)
+	Playertruth, Playerbest_five = checkStraight(Player_cards, shared_cards)
+	if AItruth==True and Playertruth==False:
+		return 1
+	elif AItruth==False and Playertruth==True:
+		return -1
+	elif AItruth==True and Playertruth==True:
+		if AIbest_five[0]>Playerbest_five[0] or (AIbest_five[0]==Playerbest_five[0] and AIbest_five[3]>Playerbest_five[3]):
+			return 1
+		elif AIbest_five[0]<Playerbest_five[0]:
+			return -1
+		else: return 0
+	
+	AItruth, AIbest_five = checkThreeOfAKind(AI_cards, shared_cards)
+	Playertruth, Playerbest_five = checkThreeOfAKind(Player_cards, shared_cards)
+	if AItruth==True and Playertruth==False:
+		return 1
+	elif AItruth==False and Playertruth==True:
+		return -1
+	elif AItruth==True and Playertruth==True:
+		if AIbest_five[0]>Playerbest_five[0]:return 1
+		elif AIbest_five[0]<Playerbest_five[0]:return -1
+		elif AIbest_five[3]>Playerbest_five[3]:return 1
+		elif AIbest_five[3]<Playerbest_five[3]:return -1
+		elif AIbest_five[4]>Playerbest_five[4]:return 1
+		elif AIbest_five[4]<Playerbest_five[4]:return -1
+		else: return 0
+	
+	AItruth, AIbest_five = checkTwoPair(AI_cards, shared_cards)
+	Playertruth, Playerbest_five = checkTwoPair(Player_cards, shared_cards)
+	if AItruth==True and Playertruth==False:
+		return 1
+	elif AItruth==False and Playertruth==True:
+		return -1
+	elif AItruth==True and Playertruth==True:
+		if AIbest_five[0]>Playerbest_five[0]:return 1
+		elif AIbest_five[0]<Playerbest_five[0]:return -1
+		elif AIbest_five[2]>Playerbest_five[2]:return 1
+		elif AIbest_five[2]<Playerbest_five[2]:return -1
+		elif AIbest_five[4]>Playerbest_five[4]:return 1
+		elif AIbest_five[4]<Playerbest_five[4]:return -1
+		else: return 0
+		
+	AItruth, AIbest_five = checkOnePair(AI_cards, shared_cards)
+	Playertruth, Playerbest_five = checkOnePair(Player_cards, shared_cards)
+	if AItruth==True and Playertruth==False:
+		return 1
+	elif AItruth==False and Playertruth==True:
+		return -1
+	elif AItruth==True and Playertruth==True:
+		if AIbest_five[0]>Playerbest_five[0]:return 1
+		elif AIbest_five[0]<Playerbest_five[0]:return -1
+		elif AIbest_five[2]>Playerbest_five[2]:return 1
+		elif AIbest_five[2]<Playerbest_five[2]:return -1
+		elif AIbest_five[3]>Playerbest_five[3]:return 1
+		elif AIbest_five[3]<Playerbest_five[3]:return -1
+		elif AIbest_five[4]>Playerbest_five[4]:return 1
+		elif AIbest_five[4]<Playerbest_five[4]:return -1
+		else: return 0
+		
+	AItruth, AIbest_five = checkHighCard(AI_cards, shared_cards)
+	Playertruth, Playerbest_five = checkHighCard(Player_cards, shared_cards)
+	if AItruth==True and Playertruth==False:
+		return 1
+	elif AItruth==False and Playertruth==True:
+		return -1
+	elif AItruth==True and Playertruth==True:
+		if AIbest_five[0]>Playerbest_five[0]:return 1
+		elif AIbest_five[0]<Playerbest_five[0]:return -1
+		elif AIbest_five[2]>Playerbest_five[2]:return 1
+		elif AIbest_five[2]<Playerbest_five[2]:return -1
+		elif AIbest_five[3]>Playerbest_five[3]:return 1
+		elif AIbest_five[3]<Playerbest_five[3]:return -1
+		elif AIbest_five[4]>Playerbest_five[4]:return 1
+		elif AIbest_five[4]<Playerbest_five[4]:return -1
+		else: return 0
+	#truth, best_five = checkFourofAKind(hole_cards, shared_cards)
+	#truth, best_five = checkFullHouse(hole_cards, shared_cards)
+	#truth, best_five = checkFlush(hole_cards, shared_cards)
+	#truth, best_five = checkStraight(hole_cards, shared_cards)
+	#truth, best_five = checkThreeOfAKind(hole_cards, shared_cards)
+	#truth, best_five = checkTwoPair(hole_cards, shared_cards)
+	#truth, best_five = checkOnePair(hole_cards, shared_cards)
+	#truth, best_five = checkHighCard(hole_cards, shared_cards)
+	
+if __name__ == '__main__':
+	AI_card1=Card("9",'H')
+	AI_card2=Card("8",'D')
+	
+	Player_card1=Card("3",'D')
+	Player_card2=Card("J",'H')
+	
+	card3=Card("K",'C')
+	card4=Card("5",'C')
+	card5=Card("2",'H')
+	card6=Card("Q", 'C')
+	card7=Card("4",'C')
+	
+	AI_cards=[AI_card1, AI_card2]
+	Player_cards=[Player_card1, Player_card2]
+	shared_cards=[card3, card4, card5, card6, card7,]
+	winner=findWinner(AI_cards, Player_cards, shared_cards)	
+	print(winner)
 
     

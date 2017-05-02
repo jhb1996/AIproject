@@ -304,6 +304,49 @@ def testevaluaters():
 	
 	print(truth, best_five)
 	
+def testevaluaters():
+	card1=Card("5",'C')
+	card2=Card("4",'C')
+	card3=Card("2",'H')
+	card4=Card("A",'C')
+	card5=Card("3",'C')
+	card6=Card("2", 'C')
+	card7=Card("3",'C')
+	hole_cards=[card1, card2]
+	shared_cards=[card3, card4, card5, card6, card7,]
+	truth, best_five = checkStraightFlush(hole_cards, shared_cards)
+	#truth, best_five = checkFourofAKind(hole_cards, shared_cards)
+	#truth, best_five = checkFullHouse(hole_cards, shared_cards)
+	#truth, best_five = checkFlush(hole_cards, shared_cards)
+	#truth, best_five = checkStraight(hole_cards, shared_cards)
+	#truth, best_five = checkThreeOfAKind(hole_cards, shared_cards)
+	#truth, best_five = checkTwoPair(hole_cards, shared_cards)
+	#truth, best_five = checkOnePair(hole_cards, shared_cards)
+	#truth, best_five = checkHighCard(hole_cards, shared_cards)
+	print(truth, best_five)
+	
+def testfindWinner():
+	AI_card1=Card("9",'H')
+	AI_card2=Card("8",'D')
+	
+	Player_card1=Card("3",'D')
+	Player_card2=Card("J",'H')
+	
+	card3=Card("K",'C')
+	card4=Card("5",'C')
+	card5=Card("2",'H')
+	card6=Card("Q", 'C')
+	card7=Card("4",'C')
+	
+	AI_cards=[AI_card1, AI_card2]
+	Player_cards=[Player_card1, Player_card2]
+	shared_cards=[card3, card4, card5, card6, card7,]
+	winner=findWinner(AI_cards, Player_cards, shared_cards)
+	print(winner)
+
+	
 tests()
+testevaluaters()
+testevaluaters()
 	
 
