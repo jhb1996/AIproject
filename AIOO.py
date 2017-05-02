@@ -1,5 +1,6 @@
 import random
 import collections
+from AIEvaluate import *
 
 class Card:
 	def __init__(self, value, suit):
@@ -276,7 +277,33 @@ def tests():
 	# print('')
 	# print preflopHand(card1,card2)
 	# print preflopHandRank(preflopHand(card1,card2))
-
+	
+	""" if you want to see how the evaluate functions work
+	return True or False, followed by the best 5 cards only
+	guarenteed to work if there is no better type"""
+def testevaluaters():
+	card1=Card("5",'C')
+	card2=Card("4",'C')
+	card3=Card("2",'H')
+	card4=Card("A",'C')
+	card5=Card("3",'C')
+	card6=Card("2", 'C')
+	card7=Card("3",'C')
+	hole_cards=[card1, card2]
+	shared_cards=[card3, card4, card5, card6, card7,]
+	truth, best_five = checkStraightFlush(hole_cards, shared_cards)
+	#truth, best_five = checkFourofAKind(hole_cards, shared_cards)
+	#truth, best_five = checkFullHouse(hole_cards, shared_cards)
+	#truth, best_five = checkFlush(hole_cards, shared_cards)
+	#truth, best_five = checkStraight(hole_cards, shared_cards)
+	#truth, best_five = checkThreeOfAKind(hole_cards, shared_cards)
+	#truth, best_five = checkTwoPair(hole_cards, shared_cards)
+	#truth, best_five = checkOnePair(hole_cards, shared_cards)
+	#truth, best_five = checkHighCard(hole_cards, shared_cards)
+	
+	
+	print(truth, best_five)
+	
 tests()
-
+	
 
