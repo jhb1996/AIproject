@@ -159,17 +159,36 @@ def checkFlush(hole_cards, shared_cards):
 	available=hole_cards+shared_cards
 	availableSuits=[]
 	availableVals=[]
-
+	suitedVals=[-1]*len(available)
+	
 	for x in range(len(available)):
 		availableSuits.append(available[x].suit)
 		availableVals.append(available[x].num_value())
-	if availableSuits.count('H') >= 5 or availableSuits.count('C') >= 5 or availableSuits.count('D') >= 5 or availableSuits.count('S') >= 5:
-		#print(availableVals)
-		availableVals.sort(reverse=True)
+	FlushSuit='0'
+	Flush=False
+	if availableSuits.count('H') >= 5:
+		FlushSuit='H'
+		Flush=True
+	elif availableSuits.count('S') >= 5:
+		FlushSuit='S'
+		Flush=True
+	elif availableSuits.count('C') >= 5:
+		Flush=True
+		FlushSuit='C'
+	elif availableSuits.count('D') >= 5:
+		Flush=True
+		FlushSuit='D'		#print(availableVals)
 		
-		return True, availableVals[:5]
+	if Flush==True:	
+		for x in range(len(availableSuits)):
+			currentVal=availableVals[x]
+			if availableSuits[x]==FlushSuit and (currentVal not in suitedVals):
+				print currentVal
+				suitedVals[x]=currentVal
+		suitedVals.sort(reverse=True)
+		
+		return True, suitedVals[:5]
 	return False, [0, 0 ,0, 0, 0] 
-
 
 def checkFourOfAKind(hole_cards, shared_cards):
 	available=hole_cards+shared_cards
@@ -243,7 +262,7 @@ def checkHighCard(hole_cards, shared_cards):
 	for x in range(len(available)):
 		available[x]= available[x].num_value()
 	available.sort(reverse=True)
-	return True, [available[:5]]
+	return True, available[:5]
 	
 """takes the AIcards (a list of two card objects), the Oponent
 	cards and the table cards (a list of 5 card objects)
@@ -393,23 +412,166 @@ def findWinner(AIcards, Playercards, shared_cards):
 	#truth, best_five = checkTwoPair(hole_cards, shared_cards)
 	#truth, best_five = checkOnePair(hole_cards, shared_cards)
 	#truth, best_five = checkHighCard(hole_cards, shared_cards)
+
+def checkFlushDraw(hole_cards, shared_cards):
+	available=hole_cards+shared_cards
+	availableSuits=[]
+	availableVals=[]
+	suitedVals=[-1]*len(available)
 	
+	for x in range(len(available)):
+		availableSuits.append(available[x].suit)
+		availableVals.append(available[x].num_value())
+	FlushSuit='0'
+	Flush=False
+	if availableSuits.count('H') == 4:
+		FlushSuit='H'
+		Flush=True
+	elif availableSuits.count('S') == 4:
+		FlushSuit='S'
+		Flush=True
+	elif availableSuits.count('C') == 4:
+		Flush=True
+		FlushSuit='C'
+	elif availableSuits.count('D') == 4:
+		Flush=True
+		FlushSuit='D'
+		
+	if Flush==True:	
+		for x in range(len(availableSuits)):
+			currentVal=availableVals[x]
+			if availableSuits[x]==FlushSuit and (currentVal not in suitedVals):
+				suitedVals[x]=currentVal
+		suitedVals.sort(reverse=True)
+		
+		return True, suitedVals[:4]
+	return False, [0, 0 ,0, 0]
+
+def checkGutShot(hole_cards, shared_cards):
+
+	available=hole_cards+shared_cards
+
+	for x in range (len(available)):
+		if available[x].num_value() not in available:
+			available[x]=available[x].num_value()
+			if available[x] == 14:
+				available.append(1)
+		else:
+			available[x]=-1
+	available.sort(reverse=True)
+	for x in range(len(available)-3):
+			if available[x] == available[x+1]+2 and available[x]== available[x+2]+3 and available[x] == available[x+3]+4: 
+				return True, available[x:x+4]#, available[x+1], available[x+2], available[x+3] ]
+			if available[x] == available[x+1]+1 and available[x]== available[x+2]+3 and available[x] == available[x+3]+4: 
+				return True, available[x:x+4]#], available[x+1], available[x+2], available[x+3] ]
+			if available[x] == available[x+1]+1 and available[x]== available[x+2]+2 and available[x] == available[x+3]+4: 
+				return True, available[x:x+4]
+			
+	return False, [0, 0, 0, 0]
+
+def checkOpenEnder(hole_cards, shared_cards):
+
+	available=hole_cards+shared_cards
+
+	for x in range (len(available)):
+		if available[x].num_value() not in available:
+			available[x]=available[x].num_value()
+			if available[x] == 14:
+				available.append(1)
+		else:
+			available[x]=-1
+	available.sort(reverse=True)
+	for x in range(len(available)-3):
+			if (available[x] == available[x+1]+1 and available[x]== available[x+2]+2 and available[x] == available[x+3]+3) and available[x+3]!=1 and available[x]!=14: 
+				return True, available[x:x+4]
+
+			
+	return False, [0, 0, 0, 0]
+
+def checkBackdoorFlush(hole_cards, shared_cards):
+	available=hole_cards+shared_cards
+	availableSuits=[]
+	availableVals=[]
+	suitedVals=[-1]*len(available)
+	
+	for x in range(len(available)):
+		availableSuits.append(available[x].suit)
+		availableVals.append(available[x].num_value())
+	FlushSuit='0'
+	Flush=False
+	if availableSuits.count('H') == 3:
+		FlushSuit='H'
+		Flush=True
+	elif availableSuits.count('S') == 3:
+		FlushSuit='S'
+		Flush=True
+	elif availableSuits.count('C') == 3:
+		Flush=True
+		FlushSuit='C'
+	elif availableSuits.count('D') == 3:
+		Flush=True
+		FlushSuit='D'
+		
+	if Flush==True:	
+		for x in range(len(availableSuits)):
+			currentVal=availableVals[x]
+			if availableSuits[x]==FlushSuit and (currentVal not in suitedVals):
+				suitedVals[x]=currentVal
+		suitedVals.sort(reverse=True)
+		
+		return True, suitedVals[:3]
+	return False, [0, 0 ,0]
+
+def checkBackdoorStraight(hole_cards, shared_cards):
+
+	available=hole_cards+shared_cards
+
+	for x in range (len(available)):
+		if available[x].num_value() not in available:
+			available[x]=available[x].num_value()
+			if available[x] == 14:
+				available.append(1)
+		else:
+			available[x]=-1
+	available.sort(reverse=True)
+	print(available)
+	for x in range(len(available)-2):
+			print(x)
+			if available[x] == available[x+1]+1 and available[x]== available[x+2]+2:
+				return True, available[x:x+3]
+			if available[x] == available[x+1]+1 and available[x]== available[x+2]+3: 
+				return True, available[x:x+3]
+			if available[x] == available[x+1]+1 and available[x]== available[x+2]+4:
+				return True, available[x:x+3]
+			if available[x] == available[x+1]+1 and available[x]== available[x+2]+3: 
+				return True, available[x:x+3]
+			if available[x] == available[x+1]+2 and available[x]== available[x+2]+3:
+				return True, available[x:x+3]
+			if available[x] == available[x+1]+2 and available[x]== available[x+2]+4: 
+				return True, available[x:x+3]
+			if available[x] == available[x+1]+3 and available[x]== available[x+2]+4:
+				return True, available[x:x+3]
+
+	return False, [0, 0, 0]
+
 if __name__ == '__main__':
-	AI_card1=Card("9",'H')
-	AI_card2=Card("8",'D')
+	AI_card1=Card("J",'C')
+	AI_card2=Card("K",'H')
 	
 	Player_card1=Card("3",'D')
 	Player_card2=Card("J",'H')
 	
-	card3=Card("K",'C')
-	card4=Card("5",'C')
-	card5=Card("2",'H')
-	card6=Card("Q", 'C')
-	card7=Card("4",'C')
+	card3=Card("3", 'C')
+	card4=Card("5", 'H')
+	card5=Card("4", 'S')
+	card6=Card("3", 'C')
+	card7=Card("2", 'S')
 	
 	AI_cards=[AI_card1, AI_card2]
 	Player_cards=[Player_card1, Player_card2]
 	shared_cards=[card3, card4, card5, card6, card7,]
+	truth, best_five = checkBackdoorStraight(AI_cards, shared_cards)
+	print(truth, best_five)
 	winner=findWinner(AI_cards, Player_cards, shared_cards)	
 	print(winner)
 

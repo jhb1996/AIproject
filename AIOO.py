@@ -98,19 +98,19 @@ def preflopHandRank(hand):
 
 def postFlopHandValue(hole_cards,table_cards):
 
-	straightFlush = False
-	quads = False
-	fullHouse = False
+	straightFlush = False #done
+	quads = False #done
+	fullHouse = False #don
 	flush = False #done
-	straight = False
+	straight = False #done
 	set3 = False
-	ThreeOfAKind = False
-	twoPair = False
+	ThreeOfAKind = False #done
+	twoPair = False #done
 	overPair = False
 	highPair = False
-	flushDraw = False
-	openEnder = False
-	gutShot = False
+	flushDraw = False#done
+	openEnder = False #done
+	gutShot = False #done
 	mediumPair = False
 	lowPair = False
 	underPair = False
