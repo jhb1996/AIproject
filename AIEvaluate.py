@@ -221,10 +221,9 @@ def checkThreeOfAKind(hole_cards, shared_cards):
 	for num in range(14, 1, -1): 
 		#print(available.count(num) == 2)
 		if available.count(num) == 3: 
-			for n in range (14, 2, -1): 
-				#print(n)
+			for n in range (14, 1, -1): 
 				if available.count(n) == 1: 
-					for m in range(n-1, 2, -1): 
+					for m in range(n-1, 1, -1):
 						if available.count(m) == 1:
 							return True,[num, num, num, n, m]
 	return False, [0, 0, 0, 0, 0]
@@ -534,9 +533,7 @@ def checkBackdoorStraight(hole_cards, shared_cards):
 		else:
 			available[x]=-1
 	available.sort(reverse=True)
-	print(available)
 	for x in range(len(available)-2):
-			print(x)
 			if available[x] == available[x+1]+1 and available[x]== available[x+2]+2:
 				return True, available[x:x+3]
 			if available[x] == available[x+1]+1 and available[x]== available[x+2]+3: 
@@ -554,25 +551,146 @@ def checkBackdoorStraight(hole_cards, shared_cards):
 
 	return False, [0, 0, 0]
 
+def checkSetThree(hole_cards, shared_cards):
+	length=len(shared_cards)
+	shared_vals=[-1]*length
+
+	for x in range (length):
+		shared_vals[x] = shared_cards[x].num_value()
+	if hole_cards[0].num_value()==hole_cards[1].num_value():
+		num = hole_cards[0].num_value()
+		if num in shared_vals: return True, [num, num, num]
+		
+	return False, [0, 0, 0]
+
+def checkTripThree(hole_cards, shared_cards):
+	length=len(shared_cards)
+	shared_vals=[-1]*length
+	
+	for x in range (length):
+		shared_vals[x] = shared_cards[x].num_value()
+	val1=hole_cards[0].num_value()
+	if shared_vals.count(val1)==2:
+		return True, [val1, val1, val1]
+	val2=hole_cards[1].num_value()
+	if shared_vals.count(val1)==2:
+		return True, [val1, val1, val1]
+	return False, [0, 0, 0]
+
+def checkHighKicker(hole_cards, shared_cards):
+	length=len(shared_cards)
+	shared_vals=[-1]*length
+	
+	val1=hole_cards[0].num_value()
+	val2=hole_cards[1].num_value()
+
+	if (val1 == 14 or val2==14):
+		return True, [14]
+	if (val1 == 13 or val2==13):
+		return True, [13]
+	return False, [0]
+
+def checkGoodKicker(hole_cards, shared_cards):
+	length=len(shared_cards)
+	shared_vals=[-1]*length
+	
+	val1=hole_cards[0].num_value()
+	val2=hole_cards[1].num_value()
+
+	if (val1 == 12 or val2==12):
+		return True, [12]
+	if (val1 == 11 or val2==11):
+		return True, [11]
+	if (val1 == 10 or val2==10):
+		return True, [10]
+	return False, [0]
+
+def checkOverPair(hole_cards, shared_cards):
+	val1=hole_cards[0].num_value()
+	val2=hole_cards[1].num_value()
+
+	if (val1 == val2):
+			length=len(shared_cards)		
+			shared_vals=[-1]*length
+			y=0
+			for x in range (length):
+				y=y+( val1>shared_cards[x].num_value())
+			if y ==x+1: return True, [0]
+	return False, [0]
+
+
+def checkUnderPair(hole_cards, shared_cards):
+	val1=hole_cards[0].num_value()
+	val2=hole_cards[1].num_value()
+
+	if (val1 == val2):
+			length=len(shared_cards)		
+			shared_vals=[-1]*length
+			y=0
+			for x in range (length):
+				y=y+(val1<shared_cards[x].num_value())
+			if y ==x+1: return True, [0]
+	return False, [0]
+
+def checkHighPair(hole_cards, shared_cards):
+	val1=hole_cards[0].num_value()
+	val2=hole_cards[1].num_value()
+	length=len(shared_cards)		
+	shared_vals=[-1]*length
+	for x in range (length):
+		shared_vals[x]=shared_cards[x].num_value()
+	shared_vals.sort(reverse=True)
+	biggest = shared_vals[0]
+	if val1==biggest or val2==biggest:
+		return True, [val1,val1]
+	return False, [0]
+
+def checkLowPair(hole_cards, shared_cards):
+	val1=hole_cards[0].num_value()
+	val2=hole_cards[1].num_value()
+	length=len(shared_cards)		
+	shared_vals=[-1]*length
+	for x in range (length):
+		shared_vals[x]=shared_cards[x].num_value()
+	shared_vals.sort(reverse=False)
+	smallest = shared_vals[0]
+	if val1==smallest or val2==smallest:
+		return True, [val1,val1]
+	return False, [0]
+
+def checkMiddlePair(hole_cards, shared_cards):
+	val1=hole_cards[0].num_value()
+	val2=hole_cards[1].num_value()
+	length=len(shared_cards)		
+	shared_vals=[-1]*length
+	for x in range (length):
+		shared_vals[x]=shared_cards[x].num_value()
+	shared_vals.sort(reverse=True)
+	middle = shared_vals[1:length-1]
+	if val1 in middle or val2==middle:
+		return True, [val1,val1]
+	return False, [0]
+
 if __name__ == '__main__':
-	AI_card1=Card("J",'C')
-	AI_card2=Card("K",'H')
+	AI_card1=Card("K",'C')
+	AI_card2=Card("J",'H')
 	
 	Player_card1=Card("3",'D')
 	Player_card2=Card("J",'H')
 	
-	card3=Card("3", 'C')
-	card4=Card("5", 'H')
+	card3=Card("K", 'C')
+	card4=Card("3", 'H')
 	card5=Card("4", 'S')
-	card6=Card("3", 'C')
-	card7=Card("2", 'S')
+	#card6=Card("4", 'C')
+	#card7=Card("5", 'S')
 	
 	AI_cards=[AI_card1, AI_card2]
 	Player_cards=[Player_card1, Player_card2]
-	shared_cards=[card3, card4, card5, card6, card7,]
-	truth, best_five = checkBackdoorStraight(AI_cards, shared_cards)
+	shared_cards=[card3, card4, card5]#, card6, card7,]
+	truth, best_five = checkMiddlePair(AI_cards, shared_cards)
 	print(truth, best_five)
 	winner=findWinner(AI_cards, Player_cards, shared_cards)	
 	print(winner)
 
-    
+
+
