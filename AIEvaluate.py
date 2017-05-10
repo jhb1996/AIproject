@@ -267,7 +267,7 @@ def checkHighCard(hole_cards, shared_cards):
 	cards and the table cards (a list of 5 card objects)
 	and returns a winner. Returns 1 if AI wins, -1 if player wins
 	and 0 if tie"""
-def findWinner(AIcards, Playercards, shared_cards):
+def findWinner(AI_cards, Player_cards, shared_cards):
 	
 	AItruth, AIbest_five = checkStraightFlush(AI_cards, shared_cards)
 	Playertruth, Playerbest_five = checkStraightFlush(Player_cards, shared_cards)
